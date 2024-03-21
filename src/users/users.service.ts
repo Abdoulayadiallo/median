@@ -8,8 +8,7 @@ export const roundsOfHashing = 10;
 
 @Injectable()
 export class UsersService {
-
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(
@@ -26,7 +25,7 @@ export class UsersService {
   }
 
   findOne(id: number) {
-    return this.prisma.user.findUnique({where:{id}});
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -36,10 +35,10 @@ export class UsersService {
         roundsOfHashing,
       );
     }
-    return this.prisma.user.update({where:{id},data:updateUserDto});
+    return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 
   remove(id: number) {
-    return this.prisma.user.delete({where:{id}});
+    return this.prisma.user.delete({ where: { id } });
   }
 }

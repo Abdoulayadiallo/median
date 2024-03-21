@@ -1,8 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
@@ -13,7 +28,7 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ type: UserEntity })
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async create(@Body() createUserDto: CreateUserDto) {
     return new UserEntity(await this.usersService.create(createUserDto));
@@ -25,28 +40,31 @@ export class UsersController {
   @ApiBearerAuth()
   async findAll() {
     const users = await this.usersService.findAll();
-    return (users).map((user) => new UserEntity(user));
+    return users.map((user) => new UserEntity(user));
   }
 
   @Get(':id')
   @ApiOkResponse({ type: UserEntity })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async findOne(@Param('id',ParseIntPipe) id: string) {
+  async findOne(@Param('id', ParseIntPipe) id: string) {
     return new UserEntity(await this.usersService.findOne(+id));
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async update(@Param('id',ParseIntPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return new UserEntity(await this.usersService.update(+id, updateUserDto));
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async remove(@Param('id',ParseIntPipe) id: string) {
+  async remove(@Param('id', ParseIntPipe) id: string) {
     return new UserEntity(await this.usersService.remove(+id));
   }
 }

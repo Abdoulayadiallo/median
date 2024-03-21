@@ -3,56 +3,52 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
-
 // initialize Prisma Client
 const prisma = new PrismaClient();
 
 const roundsOfHashing = 10;
 
-
 async function main() {
-  
-  const passwordSabin = await bcrypt.hash('password-sabin', roundsOfHashing);
-  const passwordAlex = await bcrypt.hash('password-alex', roundsOfHashing);
+  const passwordAdmin = await bcrypt.hash('password-admin', roundsOfHashing);
+  const passwordUser = await bcrypt.hash('password-user', roundsOfHashing);
 
   // create two dummy users
   const user1 = await prisma.user.upsert({
-    where: { email: 'sabin@adams.com' },
+    where: { email: 'admin@gmail.com' },
     update: {
-      password: passwordSabin,
+      password: passwordAdmin,
     },
     create: {
-      email: 'sabin@adams.com',
-      name: 'Sabin Adams',
-      password: passwordSabin,
+      email: 'admin@gmail.com',
+      name: 'Admin',
+      password: passwordAdmin,
     },
   });
 
   const user2 = await prisma.user.upsert({
-    where: { email: 'alex@ruheni.com' },
+    where: { email: 'user@gmail.com' },
     update: {
-      password: passwordAlex,
+      password: passwordUser,
     },
     create: {
-      email: 'alex@ruheni.com',
-      name: 'Alex Ruheni',
-      password: passwordAlex,
+      email: 'user@gmail.com',
+      name: 'User',
+      password: passwordUser,
     },
   });
-
 
   // create two dummy articles
   const post1 = await prisma.article.upsert({
     where: { title: 'Prisma Adds Support for MongoDB' },
     update: {
       authorId: user1.id,
-    }, 
+    },
     create: {
       title: 'Prisma Adds Support for MongoDB',
       body: 'Support for MongoDB has been one of the most requested features since the initial release of...',
       description:
         "We are excited to share that today's Prisma ORM release adds stable support for MongoDB!",
-      published: false,      
+      published: false,
       authorId: user1.id,
     },
   });

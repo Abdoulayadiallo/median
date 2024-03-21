@@ -20,10 +20,10 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const { httpAdapter } = app.get(HttpAdapterHost);
+  app.enableCors();
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   // INTERCEPTOR
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
 
   await app.listen(3000);
 }
