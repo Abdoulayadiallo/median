@@ -35,4 +35,13 @@ export class ArticlesService {
   remove(id: number) {
     return this.prisma.article.delete({ where: { id } });
   }
+
+  findAllByUser(id: number) {
+    return this.prisma.article.findMany({
+      where: {
+        authorId: id,
+        published: true,
+      },
+    });
+  }
 }

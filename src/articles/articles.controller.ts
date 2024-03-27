@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -13,7 +22,9 @@ export class ArticlesController {
   @Post()
   @ApiCreatedResponse({ type: ArticleEntity })
   async create(@Body() createArticleDto: CreateArticleDto) {
-    return new ArticleEntity(await this.articlesService.create(createArticleDto));
+    return new ArticleEntity(
+      await this.articlesService.create(createArticleDto),
+    );
   }
 
   @Get()
@@ -28,9 +39,8 @@ export class ArticlesController {
   async findDraft() {
     const articles = await this.articlesService.findDraft();
     return articles.map((article) => new ArticleEntity(article));
-
   }
-  
+
   @Get(':id')
   @ApiOkResponse({ type: ArticleEntity })
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -39,13 +49,26 @@ export class ArticlesController {
 
   @Patch(':id')
   @ApiOkResponse({ type: ArticleEntity })
-  async update(@Param('id',ParseIntPipe) id: string, @Body() updateArticleDto: UpdateArticleDto,ParseIntPipe) {
-    return new ArticleEntity(await this.articlesService.update(+id, updateArticleDto));
+  async update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateArticleDto: UpdateArticleDto,
+    ParseIntPipe,
+  ) {
+    return new ArticleEntity(
+      await this.articlesService.update(+id, updateArticleDto),
+    );
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: ArticleEntity })
-  async remove(@Param('id',ParseIntPipe) id: string) {
+  async remove(@Param('id', ParseIntPipe) id: string) {
     return new ArticleEntity(await this.articlesService.remove(+id));
+  }
+
+  @Get(':id/users')
+  @ApiOkResponse({ type: ArticleEntity, isArray: true })
+  async findAllByUser(@Param('id', ParseIntPipe) id: string) {
+    const articles = await this.articlesService.findAllByUser(+id);
+    return articles.map((article) => new ArticleEntity(article));
   }
 }
